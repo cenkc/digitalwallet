@@ -20,6 +20,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+    # schema.sql script will execute after the entity tables have been created
+    defer-datasource-initialization: true
 
 logging:
   pattern:
