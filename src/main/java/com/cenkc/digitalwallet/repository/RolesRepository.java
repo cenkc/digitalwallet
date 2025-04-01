@@ -1,7 +1,7 @@
 package com.cenkc.digitalwallet.repository;
 
-import com.cenkc.digitalwallet.entity.Roles;
+import com.cenkc.digitalwallet.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface RolesRepository extends JpaRepository<Roles, Long> {
+public interface RolesRepository extends JpaRepository<Role, Long> {
 }

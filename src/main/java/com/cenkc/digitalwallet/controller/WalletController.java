@@ -7,10 +7,9 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/wallets")
@@ -23,8 +22,16 @@ public class WalletController {
     }
 
     @PostMapping(value = "/add")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<WalletResponseDTO> addWallet(@RequestBody @Valid WalletRequestDTO walletRequestDTO) {
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    public ResponseEntity<WalletResponseDTO> add(@RequestBody @Valid WalletRequestDTO walletRequestDTO) {
         return new ResponseEntity<>(walletService.addWallet(walletRequestDTO), HttpStatus.CREATED);
+    }
+
+
+    @PutMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    public ResponseEntity<WalletResponseDTO> update(@PathVariable(name = "id") Long id,
+                                                    @Valid @RequestBody WalletRequestDTO walletRequestDTO) {
+        return new ResponseEntity<>(walletService.updateWallet(id, walletRequestDTO), HttpStatus.OK);
     }
 }

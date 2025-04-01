@@ -1,19 +1,9 @@
 package com.cenkc.digitalwallet.controller;
 
-import com.cenkc.digitalwallet.entity.dto.CustomerRequestDTO;
-import com.cenkc.digitalwallet.entity.dto.CustomerResponseDTO;
-import com.cenkc.digitalwallet.service.CustomerService;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
-@RestController
-@RequestMapping("/api/v1/customers")
+//@RestController
+//@RequestMapping("/api/v1/customers")
 public class CustomerController {
+/*
 
     private final CustomerService customerService;
 
@@ -59,5 +49,6 @@ public class CustomerController {
     public ResponseEntity<List<CustomerResponseDTO>> findAllDeleted(){
         return new ResponseEntity<>(customerService.findAllDeleted(), HttpStatus.OK);
     }
+*/
 
 }

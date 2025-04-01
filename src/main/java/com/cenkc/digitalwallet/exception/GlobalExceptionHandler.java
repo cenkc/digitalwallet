@@ -77,7 +77,7 @@ public class GlobalExceptionHandler {
                 ExceptionResponseDTO.builder()
                         .time(LocalDateTime.now())
                         // TODO : e.getMessage() may expose internal data structure
-                        //  (e.g. while validating TCKN, Customer table fields appears in the message).
+                        //  (e.g. while validating TCKN, 'users' table fields appears in the message).
                         //  So, it should be handled properly.
                         .errorMessage(String.format("Data Integrity Violation : %s", e.getMessage()))
                         .uri(req.getRequestURI())

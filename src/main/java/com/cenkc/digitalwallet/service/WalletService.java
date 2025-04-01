@@ -6,4 +6,6 @@ import jakarta.validation.Valid;
 
 public interface WalletService {
     WalletResponseDTO addWallet(@Valid WalletRequestDTO walletRequestDTO);
+
+    WalletResponseDTO updateWallet(Long id, @Valid WalletRequestDTO walletRequestDTO);
 }
