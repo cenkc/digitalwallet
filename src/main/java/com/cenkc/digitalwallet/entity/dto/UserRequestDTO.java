@@ -11,20 +11,29 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomerRequestDTO {
+public class UserRequestDTO {
 
     @NotNull
     @Size(max = 50)
     @Column(length = 50, nullable = false)
-    private String name;
+    private String firstName;
 
     @NotNull
     @Size(max = 50)
     @Column(length = 50, nullable = false)
-    private String surname;
+    private String lastName;
 
     @NotNull
     @TCKN
     @Column(nullable = false, unique = true, length = 11)
     private String tckn;
+
+    @Column(nullable = false, unique = true)
+    private String username;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
 }

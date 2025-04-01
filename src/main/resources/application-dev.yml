@@ -1,5 +1,6 @@
 # SWAGGER -> https://github.com/springdoc/springdoc-openapi-demos/tree/master/demo-spring-boot-3-webmvc
 # Spring Security -> https://medium.com/@Lakshitha_Fernando/spring-security-6-and-spring-boot-3-with-simple-project-91389cc13119
+# curl -k -u <username>:<passward> -XPOST 'http://localhost:8181/'
 server:
   port: 8181
 
@@ -20,6 +21,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+    # schema.sql script will execute after the entity tables have been created
+    defer-datasource-initialization: true
 
 logging:
   pattern:
