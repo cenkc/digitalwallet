@@ -1,31 +1,29 @@
 -- for auth
-INSERT INTO users VALUES
-(1,'alice@gmail.com','alice','$2a$12$efw2epOG4ZxnkKE3vda/n.P7rqJPgyvP3c4Drw9yBNkryHsn1j2Ra','alice'),
-(2,'bob@gmail.com','bob','$2a$12$LJt7zrT8ruN4KIGaTYLzOuZ70iUApFWBVSSCfhaebjy8bphrkPTMe','bob');
+-- for testing purposes, passwords are nothing but BCrypt hashed usernames (via https://bcrypt-generator.com/)
+INSERT INTO users (id, first_name, last_name, tckn, username, email, password, deleted)
+VALUES
+(1, 'Ahmet', 'Yılmaz', '12345678901', 'ayilmaz', 'ayilmaz@examle.com', '$2a$12$fJtDvx6pEDOpW6r/VNQOueyuhDlgkGJvW0NvdjokyWhLV7v2PNFhm', false),
+(2, 'Ayşe', 'Kara', '23456789012', 'akara', 'akara@examle.com', '$2a$12$UM1HEpo6hH7ieGQx6Z/aj.c.suAY6mKws8/pofX5EiH9d6RKnaflK', false),
+(3, 'Mehmet', 'Demir', '34567890123', 'mdemir', 'mdemir@examle.com', '$2a$12$jWiFNdTOS14xxLEXx4L3G.7zNP9N8aSAbgk.UnajS.PHwybS/oi5y', false),
+(4, 'Fatma', 'Çelik', '45678901234', 'fcelik', 'fcelik@examle.com', '$2a$12$R2GHiFufHaXY991ZrGN3HOcsTxvUDiP1lYU2wfFpFsEwme3bcC53K', false),
+(5, 'Ali', 'Öztürk', '56789012345', 'aozturk', 'aozturk@examle.com', '$2a$12$44CtQUs64.sTB3LmTudoVungx8n1RQFs1gtKiQ0jV8Ws/Tih9g/ze', false);
 
 INSERT INTO roles VALUES (1,'ROLE_USER'),(2,'ROLE_ADMIN');
 
-INSERT INTO user_roles VALUES (1,1),(2,2);
+INSERT INTO user_roles (user_id, role_id) VALUES
+(1,1), -- Ahmet Yılmaz  ROLE_ADMIN
+(1,2), -- Ahmet Yılmaz  ROLE_USER
+(2,1), -- Ayşe Kara     ROLE_USER
+(3,1), -- Mehmet Demir  ROLE_USER
+(4,1), -- Fatma Çelik   ROLE_USER
+(5,1); -- Ali Öztürk    ROLE_USER
 
 
 -- Disable foreign key constraints temporarily for H2
 SET REFERENTIAL_INTEGRITY FALSE;
 
--- Clear existing data (optional)
-TRUNCATE TABLE customers;
-TRUNCATE TABLE wallets;
-TRUNCATE TABLE transactions;
-
--- Insert test customers
-INSERT INTO customers (id, name, surname, tckn, deleted) VALUES
-(1, 'Ahmet', 'Yılmaz', '12345678901', false),
-(2, 'Ayşe', 'Kara', '23456789012', false),
-(3, 'Mehmet', 'Demir', '34567890123', false),
-(4, 'Fatma', 'Çelik', '45678901234', false),
-(5, 'Ali', 'Öztürk', '56789012345', false);
-
 -- Insert test wallets
-INSERT INTO wallets (id, customer_id, wallet_name, currency_type, active_for_shopping, active_for_withdraw, balance, usable_balance, deleted) VALUES
+INSERT INTO wallets (id, user_id, wallet_name, currency_type, active_for_shopping, active_for_withdraw, balance, usable_balance, deleted) VALUES
 (1, 1, 'Primary TL', 'TRY', true, true, 5000.00, 4800.00, false),
 (2, 1, 'Euro Savings', 'EUR', false, true, 1000.00, 1000.00, false),
 (3, 2, 'Shopping', 'TRY', true, false, 2500.00, 2500.00, false),

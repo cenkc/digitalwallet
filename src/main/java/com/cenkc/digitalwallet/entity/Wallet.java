@@ -36,18 +36,19 @@ public class Wallet {
     // TODO should use UUID in order to prevent
     //  accessing Wallet data using consecutive numbers
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "wallets_generator")
+    @SequenceGenerator(name = "wallets_generator", sequenceName = "wallets_seq", allocationSize = 1, initialValue = 1000)
     private Long id;
 
-    // Many wallets can belong to one customer
+    // Many wallets can belong to one user
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
-    private Customer customer;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @NotNull
     @Size(max = 50)
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String walletName;
 
     @NotNull

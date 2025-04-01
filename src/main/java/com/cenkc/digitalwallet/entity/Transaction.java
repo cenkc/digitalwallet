@@ -32,7 +32,9 @@ import java.math.BigDecimal;
 public class Transaction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transactions_generator")
+    @SequenceGenerator(name = "transactions_generator", sequenceName = "transactions_seq", allocationSize = 1, initialValue = 1000)
     private Long id;
 
     // Many transactions can belong to one wallet
@@ -58,6 +60,7 @@ public class Transaction {
 
     // Nullable, since TransactionType.WITHDRAW exists, it should not have opposite party
     // TODO pay attention for Unit Tests because of the nullable case !!!
+    // TODO unique = true?????????
     @OneToOne
     @JoinColumn(name = "opposite_party_id", unique = true)
     private Wallet oppositeParty;

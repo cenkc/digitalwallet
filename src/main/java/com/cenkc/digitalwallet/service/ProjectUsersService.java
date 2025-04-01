@@ -1,6 +1,6 @@
 package com.cenkc.digitalwallet.service;
 
-import com.cenkc.digitalwallet.entity.Users;
+import com.cenkc.digitalwallet.entity.User;
 import com.cenkc.digitalwallet.repository.UserRepository;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -25,7 +26,11 @@ public class ProjectUsersService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Users user = userRepository.findByUsername(username);
+        Optional<User> foundUser = userRepository.findByUsername(username);
+        if (foundUser.isEmpty()) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        User user = foundUser.get();
         Set<GrantedAuthority> authorities = user.getRoles().stream()
                 .map((roles) -> new SimpleGrantedAuthority(roles.getName()))
                 .collect(Collectors.toSet());

@@ -1,9 +1,17 @@
 package com.cenkc.digitalwallet.repository;
 
-import com.cenkc.digitalwallet.entity.Users;
+import com.cenkc.digitalwallet.entity.User;
+import jakarta.validation.Valid;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<Users, Long> {
+import java.util.Optional;
 
-    Users findByUsername(String username);
+public interface UserRepository extends JpaRepository<User, Long> {
+
+    Optional<User> findByUsername(String username);
+    User findByEmail(String email);
+    User findByTckn(String tckn);
+
+    //    @Query("SELECT u FROM User u WHERE u.deleted = false")
+//    List<User> findAllActive();
 }
