@@ -42,8 +42,27 @@ public class TransactionServiceImpl implements TransactionService {
         // Use pessimistic locking to prevent concurrent modifications
         Wallet wallet = validateAndGetWalletWithLock(requestDTO.getWalletId());
 
+        // Handle opposite party wallet if provided
+        Wallet oppositePartyWallet = null;
+        if (requestDTO.getOppositePartyWalletId() != null) {
+            oppositePartyWallet = walletRepository.findById(requestDTO.getOppositePartyWalletId())
+                    .orElseThrow(
+                            () -> new ResourceNotFoundException(
+                                    String.format(
+                                            "Opposite party wallet not found with ID: %d",
+                                            requestDTO.getOppositePartyWalletId())));
+
+            // For withdrawals to another wallet, check if currencies match
+            // PS:  Since there are only two TransactionTypes (DEPOSIT and WITHDRAW),
+            //      here treating a WITHDRAW as also transferring money between one's own wallets
+            if (requestDTO.getType() == TransactionType.WITHDRAW &&
+                    !wallet.getCurrencyType().equals(oppositePartyWallet.getCurrencyType())) {
+                throw new BadRequestException("Currency mismatch: Cannot transfer between wallets with different currencies");
+            }
+        }
+
         // Create transaction
-        Transaction transaction = createTransactionFromRequest(requestDTO, wallet);
+        Transaction transaction = createTransactionFromRequest(requestDTO, wallet, oppositePartyWallet);
 
         // Get the appropriate processor for this transaction type
         TransactionProcessor processor = transactionProcessorFactory.getProcessor(transaction.getType());
@@ -149,7 +168,7 @@ public class TransactionServiceImpl implements TransactionService {
         return wallet;
     }
 
-    private Transaction createTransactionFromRequest(TransactionRequestDTO requestDTO, Wallet wallet) {
+    private Transaction createTransactionFromRequest(TransactionRequestDTO requestDTO, Wallet wallet, Wallet oppositePartyWallet) {
         // Validate if there's enough balance for withdrawal
         if (requestDTO.getType() == TransactionType.WITHDRAW) {
             if (wallet.getUsableBalance().compareTo(requestDTO.getAmount()) < 0) {
@@ -166,7 +185,8 @@ public class TransactionServiceImpl implements TransactionService {
                 .amount(requestDTO.getAmount())
                 .type(requestDTO.getType())
                 .oppositePartyType(requestDTO.getOppositePartyType())
-                .oppositeParty(null) // Will be set if needed by specific processor
+                .oppositePartyIdentifier(requestDTO.getOppositePartyIdentifier())
+                .oppositePartyWallet(oppositePartyWallet)
                 .status(status)
                 .build();
     }
@@ -184,6 +204,9 @@ public class TransactionServiceImpl implements TransactionService {
                 .amount(transaction.getAmount())
                 .type(transaction.getType())
                 .oppositePartyType(transaction.getOppositePartyType())
+                .oppositePartyIdentifier(transaction.getOppositePartyIdentifier())
+                .oppositePartyWalletId(transaction.getOppositePartyWallet() != null ?
+                        transaction.getOppositePartyWallet().getId() : null)
                 .status(transaction.getStatus())
                 .build();
     }

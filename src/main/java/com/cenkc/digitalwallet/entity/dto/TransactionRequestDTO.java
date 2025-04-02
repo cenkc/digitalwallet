@@ -28,4 +28,16 @@ public class TransactionRequestDTO {
     @NotNull(message = "Opposite party type is required")
     private OppositePartyType oppositePartyType;
 
+    /**
+     * Identifier for the opposite party - can be an IBAN number, payment reference ID,
+     * or null if this is a transaction with another wallet in the system
+     */
+    private String oppositePartyIdentifier;
+
+    /**
+     * ID of another wallet in the system for internal transfers.
+     * This should be null for external transactions (IBAN or PAYMENT)
+     */
+    private Long oppositePartyWalletId;
+
 }

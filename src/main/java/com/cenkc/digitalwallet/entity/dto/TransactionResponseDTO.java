@@ -21,5 +21,7 @@ public class TransactionResponseDTO {
     private BigDecimal amount;
     private TransactionType type;
     private OppositePartyType oppositePartyType;
+    private String oppositePartyIdentifier;
+    private Long oppositePartyWalletId;
     private TransactionStatusType status;
 }
