@@ -11,7 +11,7 @@ import org.mockito.MockitoAnnotations;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class TCKNValidatorImplTest {
+public class TCKNValidatorImplTest {
 
     private TCKNValidatorImpl validator;
 

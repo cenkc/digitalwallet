@@ -1,4 +1,4 @@
-package com.cenkc.digitalwallet.service;
+package com.cenkc.digitalwallet.auth;
 
 import com.cenkc.digitalwallet.entity.User;
 import com.cenkc.digitalwallet.repository.UserRepository;
