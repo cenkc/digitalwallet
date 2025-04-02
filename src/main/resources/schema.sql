@@ -35,50 +35,57 @@ INSERT INTO wallets (id, user_id, wallet_name, currency_type, active_for_shoppin
 (9, 5, 'Savings', 'TRY', false, true, 15000.00, 15000.00, false);
 
 -- Insert test transactions
-INSERT INTO transactions (id, wallet_id, amount, type, opposite_party_type, opposite_party_id, status, deleted) VALUES
-(1, 1, 1000.00, 'DEPOSIT', 'PAYMENT', NULL, 'APPROVED', false),
-(2, 1, 200.00, 'WITHDRAW', 'PAYMENT', NULL, 'APPROVED', false),
-(3, 2, 500.00, 'DEPOSIT', 'IBAN', NULL, 'APPROVED', false),
-(4, 3, 1500.00, 'DEPOSIT', 'PAYMENT', NULL, 'APPROVED', false),
-(5, 3, 300.00, 'WITHDRAW', 'PAYMENT', NULL, 'APPROVED', false),
-(6, 4, 250.00, 'DEPOSIT', 'IBAN', NULL, 'APPROVED', false),
-(7, 5, 2000.00, 'DEPOSIT', 'PAYMENT', NULL, 'APPROVED', false),
-(8, 5, 500.00, 'WITHDRAW', 'PAYMENT', NULL, 'APPROVED', false),
-(9, 6, 1000.00, 'DEPOSIT', 'IBAN', NULL, 'APPROVED', false),
-(10, 7, 800.00, 'DEPOSIT', 'PAYMENT', NULL, 'APPROVED', false),
-(11, 8, 200.00, 'DEPOSIT', 'IBAN', NULL, 'APPROVED', false),
-(12, 9, 5000.00, 'DEPOSIT', 'PAYMENT', NULL, 'APPROVED', false),
-(13, 1, 300.00, 'WITHDRAW', 'PAYMENT', NULL, 'PENDING', false),
-(14, 5, 750.00, 'DEPOSIT', 'IBAN', NULL, 'PENDING', false),
-(15, 6, 500.00, 'WITHDRAW', 'PAYMENT', NULL, 'DENIED', false);
+-- Insert sample transactions with various scenarios
+-- 1. DEPOSIT transactions with IBAN as opposite party type
+INSERT INTO transactions (id, wallet_id, amount, type, opposite_party_type, opposite_party_identifier, opposite_party_wallet_id, status, deleted) VALUES
+(1, 1, 500.00, 'DEPOSIT', 'IBAN', 'TR330006100519786457841326', NULL, 'APPROVED', false),
+(2, 2, 1000.00, 'DEPOSIT', 'IBAN', 'DE89370400440532013000', NULL, 'APPROVED', false),
+(3, 3, 300.00, 'DEPOSIT', 'IBAN', 'FR7630006000011234567890189', NULL, 'APPROVED', false),
+(4, 4, 2500.00, 'DEPOSIT', 'IBAN', 'GB29NWBK60161331926819', NULL, 'PENDING', false);
+
+-- 2. DEPOSIT transactions with PAYMENT as opposite party type
+INSERT INTO transactions (id, wallet_id, amount, type, opposite_party_type, opposite_party_identifier, opposite_party_wallet_id, status, deleted) VALUES
+(5, 5, 750.00, 'DEPOSIT', 'PAYMENT', 'PAY78901234', NULL, 'APPROVED', false),
+(6, 1, 450.00, 'DEPOSIT', 'PAYMENT', 'PAY12345678', NULL, 'APPROVED', false),
+(7, 2, 1250.00, 'DEPOSIT', 'PAYMENT', 'PAY98765432', NULL, 'PENDING', false);
+
+-- 3. WITHDRAW transactions with IBAN as opposite party type
+INSERT INTO transactions (id, wallet_id, amount, type, opposite_party_type, opposite_party_identifier, opposite_party_wallet_id, status, deleted) VALUES
+(8, 1, 200.00, 'WITHDRAW', 'IBAN', 'TR330006100519786457841326', NULL, 'APPROVED', false),
+(9, 2, 350.00, 'WITHDRAW', 'IBAN', 'DE89370400440532013000', NULL, 'APPROVED', false),
+(10, 3, 1500.00, 'WITHDRAW', 'IBAN', 'FR7630006000011234567890189', NULL, 'PENDING', false);
+
+-- 4. WITHDRAW transactions with PAYMENT as opposite party type
+INSERT INTO transactions (id, wallet_id, amount, type, opposite_party_type, opposite_party_identifier, opposite_party_wallet_id, status, deleted) VALUES
+(11, 4, 100.00, 'WITHDRAW', 'PAYMENT', 'PAY43210987', NULL, 'APPROVED', false),
+(12, 5, 75.00, 'WITHDRAW', 'PAYMENT', 'PAY13579246', NULL, 'APPROVED', false),
+(13, 1, 1800.00, 'WITHDRAW', 'PAYMENT', 'PAY24681357', NULL, 'DENIED', false);
+
+-- 5. Internal transfers between wallets (one user's wallets)
+INSERT INTO transactions (id, wallet_id, amount, type, opposite_party_type, opposite_party_identifier, opposite_party_wallet_id, status, deleted) VALUES
+-- Transfer from wallet 1 to wallet 2 (same user)
+(14, 1, 300.00, 'WITHDRAW', 'PAYMENT', NULL, 2, 'APPROVED', false),
+-- Corresponding deposit to wallet 2
+(15, 2, 300.00, 'DEPOSIT', 'PAYMENT', NULL, 1, 'APPROVED', false);
+
+-- 6. Internal transfers between different users' wallets
+INSERT INTO transactions (id, wallet_id, amount, type, opposite_party_type, opposite_party_identifier, opposite_party_wallet_id, status, deleted) VALUES
+-- Transfer from wallet 3 to wallet 5 (different users)
+(16, 3, 250.00, 'WITHDRAW', 'PAYMENT', NULL, 5, 'APPROVED', false),
+-- Corresponding deposit to wallet 5
+(17, 5, 250.00, 'DEPOSIT', 'PAYMENT', NULL, 3, 'APPROVED', false);
+
+-- 7. Pending internal transfers
+INSERT INTO transactions (id, wallet_id, amount, type, opposite_party_type, opposite_party_identifier, opposite_party_wallet_id, status, deleted) VALUES
+-- Pending transfer from wallet 4 to wallet 1
+(18, 4, 1200.00, 'WITHDRAW', 'PAYMENT', NULL, 1, 'PENDING', false),
+-- Corresponding pending deposit to wallet 1
+(19, 1, 1200.00, 'DEPOSIT', 'PAYMENT', NULL, 4, 'PENDING', false);
+
+-- 8. Transactions with deleted flag set to true
+INSERT INTO transactions (id, wallet_id, amount, type, opposite_party_type, opposite_party_identifier, opposite_party_wallet_id, status, deleted) VALUES
+(20, 2, 50.00, 'WITHDRAW', 'PAYMENT', 'PAY99887766', NULL, 'APPROVED', true),
+(21, 3, 150.00, 'DEPOSIT', 'IBAN', 'GB29NWBK60161331926819', NULL, 'APPROVED', true);
 
 -- Enable foreign key constraints again for H2
 SET REFERENTIAL_INTEGRITY TRUE;
-
-
-
---
---INSERT INTO customers (id, name, surname, tckn, deleted)
---VALUES (1, 'John', 'Doe', '12345678901', false);
---INSERT INTO customers (id, name, surname, tckn, deleted)
---VALUES (2, 'Jane', 'Smith', '10987654321', false);
---INSERT INTO customers (id, name, surname, tckn, deleted)
---VALUES (3, 'Alice', 'Brown', '11122233344', false);
---
-----
---INSERT INTO wallets (id, customer_id, walletName, currencyType, activeForShopping, activeForWithdraw, balance, usableBalance, deleted)
---VALUES (1, 1, 'John''s Personal Wallet', 'USD', true, true, 1000.00, 800.00, false);
---INSERT INTO wallets (id, customer_id, walletName, currencyType, activeForShopping, activeForWithdraw, balance, usableBalance, deleted)
---VALUES (2, 1, 'John''s Business Wallet', 'USD', true, true, 1000.00, 800.00, false);
---INSERT INTO wallets (id, customer_id, walletName, currencyType, activeForShopping, activeForWithdraw, balance, usableBalance, deleted)
---VALUES (3, 2, 'Jane''s Business Wallet', 'EUR', true, false, 2000.50, 1500.50, false);
---INSERT INTO wallets (id, customer_id, walletName, currencyType, activeForShopping, activeForWithdraw, balance, usableBalance, deleted)
---VALUES (4, 3, 'Alice''s Savings Wallet', 'TRY', false, true, 500.00, 500.00, false);
---
-----
---INSERT INTO transactions (id, wallet_id, amount, type, oppositePartyType, opposite_party_id, status, deleted)
---VALUES (1, 1, 100.00, 'DEPOSIT', 'PAYMENT', 2, 'SUCCESS', false); --John's Personal Wallet --> John''s Business Wallet (transfer between one's own wallets)
---INSERT INTO transactions (id, wallet_id, amount, type, oppositePartyType, opposite_party_id, status, deleted)
---VALUES (2, 4, 50.00, 'WITHDRAW', 'PAYMENT', NULL, 'PENDING', false); --John''s Business Wallet
---INSERT INTO transactions (id, wallet_id, amount, type, oppositePartyType, opposite_party_id, status, deleted)
---VALUES (3, 3, 200.00, 'DEPOSIT', 'IBAN', NULL, 'SUCCESS', false);

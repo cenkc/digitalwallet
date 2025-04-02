@@ -15,7 +15,14 @@ import org.hibernate.annotations.SQLDelete;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "transactions")
+@Table(
+        name = "transactions",
+        indexes = {
+                @Index(name = "idx_transactions_wallet_id", columnList = "wallet_id"),
+                @Index(name = "idx_transactions_status", columnList = "status"),
+                @Index(name = "idx_transactions_opposite_party_wallet_id", columnList = "opposite_party_wallet_id")
+        }
+)
 @SQLDelete(sql = "UPDATE transactions SET deleted = true WHERE id = ?")
 @FilterDef(
         name = "deletedTransactionFilter",
@@ -58,12 +65,23 @@ public class Transaction {
     @Column(nullable = false)
     private OppositePartyType oppositePartyType;
 
-    // Nullable, since TransactionType.WITHDRAW exists, it should not have opposite party
-    // TODO pay attention for Unit Tests because of the nullable case !!!
-    // TODO unique = true?????????
-    @OneToOne
-    @JoinColumn(name = "opposite_party_id", unique = true)
-    private Wallet oppositeParty;
+    /**
+     * The identifier of the opposite party:
+     * - For IBAN: The bank account number (e.g., "TR330006100519786457841326")
+     * - For PAYMENT: The payment reference ID (e.g., "PAY123456789")
+     */
+    // TODO Implement a custom @IBAN validator (refer to @TCKN)
+    @Column(name = "opposite_party_identifier")
+    private String oppositePartyIdentifier;
+
+    /**
+     * For internal transfers between wallets within the system.
+     * This is only populated when transferring between two wallets in the system.
+     * For external transactions (bank transfers, payments), this will be null.
+     */
+    @ManyToOne
+    @JoinColumn(name = "opposite_party_wallet_id")
+    private Wallet oppositePartyWallet;
 
     @NotNull
     @Enumerated(EnumType.STRING)
