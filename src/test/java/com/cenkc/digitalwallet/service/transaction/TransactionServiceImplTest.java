@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class TransactionServiceImplTest {
+public class TransactionServiceImplTest {
 
     @Mock
     private TransactionRepository transactionRepository;
