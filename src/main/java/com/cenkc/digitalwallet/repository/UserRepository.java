@@ -12,6 +12,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByEmail(String email);
     User findByTckn(String tckn);
 
-    //    @Query("SELECT u FROM User u WHERE u.deleted = false")
-//    List<User> findAllActive();
 }

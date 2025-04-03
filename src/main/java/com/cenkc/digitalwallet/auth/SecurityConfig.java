@@ -29,32 +29,6 @@ public class SecurityConfig {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-/*
-    private final UserRepository userRepository;
-
-    public SecurityConfig(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return username -> {
-            Optional<User> foundUser = userRepository.findByUsername(username);
-            if (foundUser.isEmpty()) {
-                throw new UsernameNotFoundException("User not found");
-            }
-            User user = foundUser.get();
-            return new org.springframework.security.core.userdetails.User(
-                    user.getUsername(),
-                    user.getPassword(),
-                    user.getRoles().stream()
-                            .map(role -> new SimpleGrantedAuthority(role.getName()))
-                            .collect(Collectors.toSet())
-            );
-        };
-    }
-*/
-
     @Bean(name = "pwdEncoder")
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
