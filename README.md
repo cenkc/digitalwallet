@@ -126,7 +126,8 @@ Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ=
   "walletId": 1,
   "amount": 500.00,
   "type": "DEPOSIT",
-  "oppositePartyType": "IBAN"
+  "oppositePartyType": "IBAN",
+  "oppositePartyIdentifier": "TR330006100519786457841326"
 }
 ```
 
@@ -138,10 +139,11 @@ Content-Type: application/json
 Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ=
 
 {
-  "walletId": 1,
-  "amount": 200.00,
+  "walletId": 3,
+  "amount": 250.00,
   "type": "WITHDRAW",
-  "oppositePartyType": "PAYMENT"
+  "oppositePartyType": "PAYMENT",
+  "oppositePartyWalletId": 5
 }
 ```
 
